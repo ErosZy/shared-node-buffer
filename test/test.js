@@ -15,10 +15,6 @@ describe("node-shared-buffer", () => {
     }
   });
 
-  afterEach(() => {
-    buffer && buffer.dispose();
-  });
-
   describe("constructor method", () => {
     it("constructor(key)", () => {
       buffer = new SharedNodeBuffer(FILEKEY);

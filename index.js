@@ -93,14 +93,6 @@ class SharedNodeBuffer {
   values() {
     return this.disposed ? [] : this.data.values();
   }
-
-  dispose() {
-    if (this.data instanceof Buffer) {
-      binding.unmap(this.data);
-    }
-    this.disposed = true;
-    this.data = null;
-  }
 }
 
 [

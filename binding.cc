@@ -101,37 +101,9 @@ Napi::Value __mmap(const Napi::CallbackInfo &info)
     return Napi::Buffer<uint8_t>::New(env, data, length, finalize, new int(length));
 }
 
-Napi::Value __unmap(const Napi::CallbackInfo &info)
-{
-    Napi::Env env = info.Env();
-    if (info.Length() < 1)
-    {
-        Napi::TypeError::New(env, "wrong number of arguments").ThrowAsJavaScriptException();
-        return env.Null();
-    }
-
-    Napi::Buffer<uint8_t> buffer = info[0].As<Napi::Buffer<uint8_t>>();
-    void *data = buffer.Data();
-
-    int error = 0;
-#if defined(_WIN32)
-    error = (int)!UnmapViewOfFile(data);
-#else
-    error = munmap(data, buffer.ByteLength());
-#endif
-
-    if (error != 0)
-    {
-        Napi::Error::New(env, "detach failed").ThrowAsJavaScriptException();
-    }
-
-    return env.Null();
-}
-
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
     exports.Set(Napi::String::New(env, "mmap"), Napi::Function::New(env, __mmap));
-    exports.Set(Napi::String::New(env, "unmap"), Napi::Function::New(env, __unmap));
     return exports;
 }
 
