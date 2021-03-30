@@ -44,9 +44,9 @@ Napi::Value __mmap(const Napi::CallbackInfo &info)
 
     int fd = 0;
 #if defined(_WIN32)
-    fd = _open(filepath.c_str(), _O_CREAT | _O_RDWR | (!allocated ? _O_TRUNC : 0), 0777);
+    fd = _open(filepath.c_str(), _O_CREAT | _O_RDWR | (allocated ? _O_TRUNC : 0), 0777);
 #else
-    fd = open(filepath.c_str(), O_CREAT | O_RDWR | (!allocated ? O_TRUNC : 0), 0777);
+    fd = open(filepath.c_str(), O_CREAT | O_RDWR | (allocated ? O_TRUNC : 0), 0777);
 #endif
 
     if (fd == -1)
@@ -55,7 +55,7 @@ Napi::Value __mmap(const Napi::CallbackInfo &info)
         return env.Null();
     }
 
-    if (!allocated && !__fallocate(fd, length))
+    if (allocated && !__fallocate(fd, length))
     {
         Napi::TypeError::New(env, "fallocate file failed").ThrowAsJavaScriptException();
         close(fd);
@@ -130,8 +130,8 @@ Napi::Value __unmap(const Napi::CallbackInfo &info)
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
-    exports.Set(Napi::String::New(env, "bind"), Napi::Function::New(env, __mmap));
-    exports.Set(Napi::String::New(env, "unbind"), Napi::Function::New(env, __unmap));
+    exports.Set(Napi::String::New(env, "mmap"), Napi::Function::New(env, __mmap));
+    exports.Set(Napi::String::New(env, "unmap"), Napi::Function::New(env, __unmap));
     return exports;
 }
 

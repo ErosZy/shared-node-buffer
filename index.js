@@ -6,17 +6,20 @@ const warn = console.warn || noop;
 
 const DEFAULT_BUFFER_SIZE = 10485760;
 class SharedNodeBuffer {
-  constructor(key, size = DEFAULT_BUFFER_SIZE) {
+  constructor(key, size) {
     const filepath = `${os.tmpdir()}/${key}`;
+    size = Number(size);
+    size = size && !isNaN(size) && size > 0 ? size : DEFAULT_BUFFER_SIZE;
+
     if (fs.existsSync(filepath)) {
       const filesize = fs.statSync(filepath).size;
-      if (size != null && filesize != size) {
+      if (filesize != size) {
         warn(`key(${key}) already exists, and size(${size}) != ${filesize}, size will be set to ${filesize} instead.`);
         size = filesize;
       }
-      this.data = binding.bind(filepath, size, true);
+      this.data = binding.mmap(filepath, size, false);
     } else {
-      this.data = binding.bind(filepath, size, false);
+      this.data = binding.unmap(filepath, size, true);
     }
 
     this.length = this.data.length;
