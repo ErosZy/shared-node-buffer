@@ -2,7 +2,9 @@
 
 > Node shared buffer class for fast sharing data between processes (Windows/OSX/Linux supported).
 
-![ci](https://github.com/ErosZy/shared-node-buffer/actions/workflows/node.js.yml/badge.svg)
+![linux ci](https://github.com/ErosZy/shared-node-buffer/actions/workflows/linux.yml/badge.svg)
+![osx ci](https://github.com/ErosZy/shared-node-buffer/actions/workflows/osx.yml/badge.svg)
+![windows ci](https://github.com/ErosZy/shared-node-buffer/actions/workflows/windows.yml/badge.svg)
 
 About
 -----
