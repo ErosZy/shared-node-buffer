@@ -16,6 +16,4 @@ bool __fallocate(const int fd, const size_t length);
 
 Napi::Value bind(const Napi::CallbackInfo &info);
 
-Napi::Value unbind(const Napi::CallbackInfo &info);
-
 Napi::Object Init(Napi::Env env, Napi::Object exports);

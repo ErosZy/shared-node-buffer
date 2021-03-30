@@ -3,57 +3,53 @@ const fs = require("fs");
 const os = require("os");
 const { fork } = require("child_process");
 const SharedNodeBuffer = require("../index");
+let index = +new Date();
 let buffer = null;
 
-const FILEKEY = `shared-node-buffer`;
-const FILEPATH = `${os.tmpdir()}/${FILEKEY}`;
+const genFileKey = () => {
+  return `${index++}`;
+};
 
 describe("node-shared-buffer", () => {
-  beforeEach(() => {
-    if (fs.existsSync(FILEPATH)) {
-      fs.unlinkSync(FILEPATH);
-    }
-  });
-
   describe("constructor method", () => {
     it("constructor(key)", () => {
-      buffer = new SharedNodeBuffer(FILEKEY);
+      buffer = new SharedNodeBuffer(genFileKey());
       assert.equal(buffer.length, 1024 * 1024 * 10);
     });
 
     it("constructor(key, size)", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 1024);
+      buffer = new SharedNodeBuffer(genFileKey(), 1024);
       assert.equal(buffer.length, 1024);
     });
 
     it("when size != filesize, it should be set filesize", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 1024);
-      buffer.dispose();
-      buffer = new SharedNodeBuffer(FILEKEY);
+      const filekey = genFileKey();
+      buffer = new SharedNodeBuffer(filekey, 1024);
+      buffer = new SharedNodeBuffer(filekey);
       assert.equal(buffer.length, 1024);
     });
 
     it("when size is not number, it should set 10m", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, "hello");
+      buffer = new SharedNodeBuffer(genFileKey(), "hello");
       assert.equal(buffer.length, 1024 * 1024 * 10);
     });
   });
 
   describe("compare method", () => {
     it("compare(target) == 0", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 3);
+      buffer = new SharedNodeBuffer(genFileKey(), 3);
       buffer.write("ABC");
       assert.equal(buffer.compare(Buffer.from("ABC")), 0);
     });
 
     it("compare(target) == -1", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 3);
+      buffer = new SharedNodeBuffer(genFileKey(), 3);
       buffer.write("ABC");
       assert.equal(buffer.compare(Buffer.from("BCD")), -1);
     });
 
     it("compare(target) == 1", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 3);
+      buffer = new SharedNodeBuffer(genFileKey(), 3);
       buffer.write("BCD");
       assert.equal(buffer.compare(Buffer.from("ABCD")), 1);
     });
@@ -61,7 +57,7 @@ describe("node-shared-buffer", () => {
 
   describe("copy method", () => {
     it("copy(target[, targetStart[, sourceStart[, sourceEnd]]])", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 26);
+      buffer = new SharedNodeBuffer(genFileKey(), 26);
       for (let i = 0; i < 26; i++) {
         buffer.data[i] = i + 97;
       }
@@ -74,7 +70,7 @@ describe("node-shared-buffer", () => {
 
   describe("entries method", () => {
     it("entries()", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 3);
+      buffer = new SharedNodeBuffer(genFileKey(), 3);
       buffer.write("123");
       let sum = 0;
       for (let pair of buffer.entries()) {
@@ -86,7 +82,7 @@ describe("node-shared-buffer", () => {
 
   describe("equals method", () => {
     it("equals(otherBuffer)", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 3);
+      buffer = new SharedNodeBuffer(genFileKey(), 3);
       buffer.write("ABC");
       assert.equal(buffer.equals(Buffer.from("ABC")), true);
     });
@@ -94,7 +90,7 @@ describe("node-shared-buffer", () => {
 
   describe("fill method", () => {
     it("fill(value[, offset[, end]][, encoding])", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 10);
+      buffer = new SharedNodeBuffer(genFileKey(), 10);
       buffer.fill("h");
       assert.equal(buffer.toString(), "hhhhhhhhhh");
     });
@@ -102,7 +98,7 @@ describe("node-shared-buffer", () => {
 
   describe("includes method", () => {
     it("includes(value[, byteOffset][, encoding])", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 10);
+      buffer = new SharedNodeBuffer(genFileKey(), 10);
       buffer.write("this is a buffer");
       assert.equal(buffer.includes("this"), true);
     });
@@ -110,7 +106,7 @@ describe("node-shared-buffer", () => {
 
   describe("indexOf method", () => {
     it("indexOf(value[, byteOffset][, encoding])", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 16);
+      buffer = new SharedNodeBuffer(genFileKey(), 16);
       buffer.write("this is a buffer");
       assert.equal(buffer.indexOf("is"), 2);
     });
@@ -118,14 +114,14 @@ describe("node-shared-buffer", () => {
 
   describe("keys method", () => {
     it("keys()", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 5);
+      buffer = new SharedNodeBuffer(genFileKey(), 5);
       assert.deepEqual([...buffer.keys()], [0, 1, 2, 3, 4]);
     });
   });
 
   describe("lastIndexOf method", () => {
     it("lastIndexOf(value[, byteOffset][, encoding])", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 23);
+      buffer = new SharedNodeBuffer(genFileKey(), 23);
       buffer.write("this buffer is a buffer");
       assert.equal(buffer.lastIndexOf("buffer"), 17);
     });
@@ -133,14 +129,14 @@ describe("node-shared-buffer", () => {
 
   describe("length property", () => {
     it("length", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 10);
+      buffer = new SharedNodeBuffer(genFileKey(), 10);
       assert.equal(buffer.length, 10);
     });
   });
 
   describe("subarray method", () => {
     it("subarray([start[, end]])", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 26);
+      buffer = new SharedNodeBuffer(genFileKey(), 26);
       for (let i = 0; i < 26; i++) {
         buffer.data[i] = i + 97;
       }
@@ -152,7 +148,7 @@ describe("node-shared-buffer", () => {
 
   describe("slice method", () => {
     it("slice([start[, end]])", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 26);
+      buffer = new SharedNodeBuffer(genFileKey(), 26);
       for (let i = 0; i < 26; i++) {
         buffer.data[i] = i + 97;
       }
@@ -164,7 +160,7 @@ describe("node-shared-buffer", () => {
 
   describe("swap16 method", () => {
     it("swap16()", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 4);
+      buffer = new SharedNodeBuffer(genFileKey(), 4);
       buffer.data[0] = 0x1;
       buffer.data[1] = 0x2;
       buffer.data[2] = 0x3;
@@ -176,7 +172,7 @@ describe("node-shared-buffer", () => {
 
   describe("swap32 method", () => {
     it("swap32()", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 4);
+      buffer = new SharedNodeBuffer(genFileKey(), 4);
       buffer.data[0] = 0x1;
       buffer.data[1] = 0x2;
       buffer.data[2] = 0x3;
@@ -188,7 +184,7 @@ describe("node-shared-buffer", () => {
 
   describe("swap64 method", () => {
     it("swap64()", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 8);
+      buffer = new SharedNodeBuffer(genFileKey(), 8);
       buffer.data[0] = 0x1;
       buffer.data[1] = 0x2;
       buffer.data[2] = 0x3;
@@ -205,7 +201,7 @@ describe("node-shared-buffer", () => {
   describe("toJSON method", () => {
     it("toJSON()", () => {
       const jsonstr = JSON.stringify({ a: 1 });
-      buffer = new SharedNodeBuffer(FILEKEY, jsonstr.length);
+      buffer = new SharedNodeBuffer(genFileKey(), jsonstr.length);
       buffer.write(jsonstr);
       assert.deepEqual(buffer.toJSON(), { data: [123, 34, 97, 34, 58, 49, 125], type: "Buffer" });
     });
@@ -213,7 +209,7 @@ describe("node-shared-buffer", () => {
 
   describe("toString method", () => {
     it("toString([encoding[, start[, end]]])", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 26);
+      buffer = new SharedNodeBuffer(genFileKey(), 26);
       for (let i = 0; i < 26; i++) {
         buffer.data[i] = i + 97;
       }
@@ -224,7 +220,7 @@ describe("node-shared-buffer", () => {
 
   describe("values method", () => {
     it("values()", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 3);
+      buffer = new SharedNodeBuffer(genFileKey(), 3);
       buffer.write("123");
       assert.deepEqual([...buffer.values()], [49, 50, 51]);
     });
@@ -252,7 +248,7 @@ describe("node-shared-buffer", () => {
       ["readUIntLE", "writeUIntLE"],
     ].forEach((v) => {
       it(v.join(" and "), () => {
-        buffer = new SharedNodeBuffer(FILEKEY, 64);
+        buffer = new SharedNodeBuffer(genFileKey(), 64);
         buffer[v[1]](125, 0, 6);
         assert.equal(buffer[v[0]](0, 6), 125);
       });
@@ -261,7 +257,7 @@ describe("node-shared-buffer", () => {
 
   describe("write method", () => {
     it("write(string[, offset[, length]][, encoding])", () => {
-      buffer = new SharedNodeBuffer(FILEKEY, 64);
+      buffer = new SharedNodeBuffer(genFileKey(), 64);
       const len = buffer.write("\u00bd + \u00bc = \u00be", 0);
       assert.equal(buffer.toString("utf8", 0, len), "½ + ¼ = ¾");
     });
@@ -270,9 +266,10 @@ describe("node-shared-buffer", () => {
   describe("multi worker read/write", () => {
     it("master write and cluster read", (done) => {
       const now = +new Date() + "";
-      buffer = new SharedNodeBuffer(FILEKEY, now.length);
+      const filekey = genFileKey();
+      buffer = new SharedNodeBuffer(filekey, now.length);
       buffer.write(now);
-      const child = fork(`${__dirname}/worker.js`, [FILEKEY, now.length]);
+      const child = fork(`${__dirname}/worker.js`, [filekey, now.length]);
       child.on("message", (data) => {
         if (data == now) {
           done();
