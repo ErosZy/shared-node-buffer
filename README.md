@@ -1,7 +1,6 @@
 # shared-node-buffer
-============
 
-Node shared buffer class for sharing data between processes.
+> Node shared buffer class for sharing data between processes, Windows/OSX/Linux supported.
 
 About
 -----
