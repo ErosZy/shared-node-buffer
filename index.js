@@ -14,35 +14,53 @@ class SharedNodeBuffer {
     if (fs.existsSync(filepath)) {
       const filesize = fs.statSync(filepath).size;
       if (filesize != size) {
-        warn(`key(${key}) already exists, and size(${size}) != ${filesize}, size will be set to ${filesize} instead.`);
+        warn(`SharedNodeBuffer: key(${key}) already exists, and size(${size}) != ${filesize}, size will be set to ${filesize} instead.`);
         size = filesize;
       }
       this.data = binding.mmap(filepath, size, false);
     } else {
-      this.data = binding.unmap(filepath, size, true);
+      this.data = binding.mmap(filepath, size, true);
     }
 
     this.length = this.data.length;
     this.disposed = false;
   }
 
-  compare(...args) {}
+  compare(...args) {
+    return this.disposed ? 0 : this.data.compare(...args);
+  }
 
-  copy(...args) {}
+  copy(...args) {
+    return this.disposed ? 0 : this.data.copy(...args);
+  }
 
-  entries() {}
+  entries() {
+    return this.disposed ? [] : this.data.entries();
+  }
 
-  equals(buffer) {}
+  equals(...args) {
+    return this.disposed ? false : this.data.equals(...args);
+  }
 
-  fill(...args) {}
+  fill(...args) {
+    return this.disposed ? Buffer.alloc(0) : this.data.fill(...args);
+  }
 
-  includes(...args) {}
+  includes(...args) {
+    return this.disposed ? false : this.data.includes(...args);
+  }
 
-  indexOf(...args) {}
+  indexOf(...args) {
+    return this.disposed ? -1 : this.data.indexOf(...args);
+  }
 
-  keys() {}
+  keys() {
+    return this.disposed ? [] : this.data.keys();
+  }
 
-  lastIndexOf(...args) {}
+  lastIndexOf(...args) {
+    return this.disposed ? -1 : this.data.lastIndexOf(...args);
+  }
 
   subarray(...args) {
     return this.disposed ? Buffer.alloc(0) : this.data.subarray(...args);
@@ -52,21 +70,33 @@ class SharedNodeBuffer {
     return this.disposed ? Buffer.alloc(0) : this.data.slice(...args);
   }
 
-  swap16() {}
+  swap16() {
+    return this.disposed ? Buffer.alloc(0) : this.data.swap16();
+  }
 
-  swap32() {}
+  swap32() {
+    return this.disposed ? Buffer.alloc(0) : this.data.swap32();
+  }
 
-  swap64() {}
+  swap64() {
+    return this.disposed ? Buffer.alloc(0) : this.data.swap64();
+  }
 
-  toJSON() {}
+  toJSON() {
+    return this.disposed ? {} : this.data.toJSON();
+  }
 
-  toString(...args) {}
+  toString(...args) {
+    return this.disposed ? "" : this.data.toString(...args);
+  }
 
-  values() {}
+  values() {
+    return this.disposed ? [] : this.data.values();
+  }
 
   dispose() {
     if (this.data instanceof Buffer) {
-      binding.unbind(this.data);
+      binding.unmap(this.data);
     }
     this.disposed = true;
     this.data = null;
