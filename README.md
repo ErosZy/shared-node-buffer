@@ -2,6 +2,8 @@
 
 > Node shared buffer class for fast sharing data between processes (Windows/OSX/Linux supported).
 
+![ci](https://github.com/ErosZy/shared-node-buffer/actions/workflows/node.js.yml/badge.svg)
+
 About
 -----
 The SharedNodeBuffer class library provides Node.js class that utilise memory mapped files for fast low-level inter-process communication (IPC).
