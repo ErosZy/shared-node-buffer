@@ -1,11 +1,10 @@
 # shared-node-buffer
-============
 
-Node shared buffer class for sharing data between processes, Windows/OSX/Linux supported.
+> Node shared buffer class for sharing data between processes (Windows/OSX/Linux supported).
 
 About
 -----
-The SharedNodeBuffer class library provides a set of Node.js class that utilise memory mapped files for fast low-level inter-process communication (IPC).
+The SharedNodeBuffer class library provides Node.js class that utilise memory mapped files for fast low-level inter-process communication (IPC).
 
 Install
 -------
