@@ -68,18 +68,6 @@ describe("node-shared-buffer", () => {
     });
   });
 
-  describe("entries method", () => {
-    it("entries()", () => {
-      buffer = new SharedNodeBuffer(genFileKey(), 3);
-      buffer.write("123");
-      let sum = 0;
-      for (let pair of buffer.entries()) {
-        sum += pair[1];
-      }
-      assert.equal(sum, 150);
-    });
-  });
-
   describe("equals method", () => {
     it("equals(otherBuffer)", () => {
       buffer = new SharedNodeBuffer(genFileKey(), 3);
@@ -112,13 +100,6 @@ describe("node-shared-buffer", () => {
     });
   });
 
-  describe("keys method", () => {
-    it("keys()", () => {
-      buffer = new SharedNodeBuffer(genFileKey(), 5);
-      assert.deepEqual([...buffer.keys()], [0, 1, 2, 3, 4]);
-    });
-  });
-
   describe("lastIndexOf method", () => {
     it("lastIndexOf(value[, byteOffset][, encoding])", () => {
       buffer = new SharedNodeBuffer(genFileKey(), 23);
@@ -131,18 +112,6 @@ describe("node-shared-buffer", () => {
     it("length", () => {
       buffer = new SharedNodeBuffer(genFileKey(), 10);
       assert.equal(buffer.length, 10);
-    });
-  });
-
-  describe("subarray method", () => {
-    it("subarray([start[, end]])", () => {
-      buffer = new SharedNodeBuffer(genFileKey(), 26);
-      for (let i = 0; i < 26; i++) {
-        buffer.data[i] = i + 97;
-      }
-
-      const buf2 = buffer.subarray(0, 3);
-      assert.equal(buf2.toString("ascii", 0, buf2.length), "abc");
     });
   });
 
@@ -215,14 +184,6 @@ describe("node-shared-buffer", () => {
       }
       assert.equal(buffer.toString("utf8"), "abcdefghijklmnopqrstuvwxyz");
       assert.equal(buffer.toString("utf8", 0, 5), "abcde");
-    });
-  });
-
-  describe("values method", () => {
-    it("values()", () => {
-      buffer = new SharedNodeBuffer(genFileKey(), 3);
-      buffer.write("123");
-      assert.deepEqual([...buffer.values()], [49, 50, 51]);
     });
   });
 
