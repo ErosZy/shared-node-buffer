@@ -1,6 +1,6 @@
 {
   "name": "shared-node-buffer",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -16,5 +16,11 @@
     "node-gyp": "^7.1.2"
   },
   "license": "MIT",
-  "gypfile": true
+  "gypfile": true,
+  "keywords": [
+    "nodejs",
+    "sharedbuffer",
+    "ipc",
+    "addons"
+  ]
 }
