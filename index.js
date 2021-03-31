@@ -14,9 +14,7 @@ class SharedNodeBuffer {
     if (fs.existsSync(filepath)) {
       const filesize = fs.statSync(filepath).size;
       if (filesize != size) {
-        warn(
-          `SharedNodeBuffer: key(${key}) already exists, and size(${size}) != ${filesize}, size will be set to ${filesize} instead.`
-        );
+        warn(`SharedNodeBuffer: key(${key}) already exists, and size(${size}) != ${filesize}, size will be set to ${filesize} instead.`);
         size = filesize;
       }
       this.data = binding.mmap(filepath, size, false);
