@@ -1,10 +1,13 @@
 # shared-node-buffer
 
 > Node shared buffer class for fast sharing data between processes (Windows/OSX/Linux supported).
+> 
 
 ![linux ci](https://github.com/ErosZy/shared-node-buffer/actions/workflows/linux.yml/badge.svg)
 ![osx ci](https://github.com/ErosZy/shared-node-buffer/actions/workflows/osx.yml/badge.svg)
 ![windows ci](https://github.com/ErosZy/shared-node-buffer/actions/workflows/windows.yml/badge.svg)
+<a href="https://www.npmjs.com/package/shared-node-buffer"><img src="https://img.shields.io/npm/v/shared-node-buffer.svg?sanitize=true" alt="Version"></a>
+<a href="https://www.npmjs.com/package/shared-node-buffer"><img src="https://img.shields.io/npm/l/shared-node-buffer.svg?sanitize=true" alt="License"></a>
 
 About
 -----
@@ -34,7 +37,7 @@ if (cluster.isMain) {
 API
 ---
 
-SharedNodeBuffer proxys the most Buffer.prototype's method, you can find at [Node.js Buffer Doc](https://nodejs.org/dist/latest-v15.x/docs/api/buffer.html#buffer_buf_includes_value_byteoffset_encoding).
+SharedNodeBuffer proxys the most Buffer.prototype's method, you can find at [Node.js Buffer Doc](https://nodejs.org/dist/latest-v15.x/docs/api/buffer.html).
 
 MIT License
 -----------

@@ -1,6 +1,6 @@
 {
   "name": "shared-node-buffer",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,5 +15,6 @@
     "mocha": "^8.3.2",
     "node-gyp": "^7.1.2"
   },
+  "license": "MIT",
   "gypfile": true
 }
